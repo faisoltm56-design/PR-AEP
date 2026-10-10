@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ห้องโปรแกรม AEP ภาษาอาหรับและอังกฤษ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+<style>
+:root{--p:#0284C7;--pd:#075985;--o:#F97316;--bg:#FFFFFF;--soft:#F0F9FF}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--soft);font-family:'Sriracha','Noto Sans Thai',Tahoma,sans-serif;color:#0C4A6E;overflow:hidden}
+body{display:grid;place-items:center}
+.stage{width:min(100vw,177.78vh);aspect-ratio:16/9;container-type:size;position:relative}
+.slide{position:absolute;inset:2cqw;background:var(--bg);border-radius:2.4cqw;box-shadow:0 .5cqw 2cqw rgba(2,132,199,.12);padding:3.2cqw 4cqw 3cqw;display:none;flex-direction:column;overflow:hidden}
+.slide.active{display:flex}
+.tag{align-self:flex-start;background:var(--soft);color:var(--p);border:.12cqw solid #BAE6FD;border-radius:99cqw;padding:.45cqw 1.6cqw;font-size:1.5cqw}
+.head{display:flex;justify-content:space-between;align-items:center;gap:2cqw;margin-top:1.6cqw}
+h1,h2{font-weight:700;line-height:1.25;font-size:4.6cqw}
+h1{font-size:5.6cqw}
+.g{background:linear-gradient(90deg,var(--p),var(--o));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ic{flex:none;width:7cqw;height:7cqw;border-radius:50%;background:linear-gradient(135deg,var(--p),#0369A1);display:grid;place-items:center;transition:transform .25s}
+.ic svg{width:52%;height:52%;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ic:hover{transform:scale(1.12)}
+.big .ic{width:9cqw;height:9cqw}
+.pill{align-self:flex-start;margin-top:1.4cqw;background:var(--o);color:#fff;border-radius:99cqw;padding:.6cqw 2cqw;font-size:2.2cqw;font-weight:700}
+.sub{margin-top:1.2cqw;font-size:2.2cqw;color:#0369A1}
+.cards{flex:1;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:1.8cqw;margin-top:2.2cqw;min-height:0;padding-bottom:3cqw}
+.card{border-radius:1.8cqw;padding:2.2cqw;display:flex;flex-direction:column;gap:1.2cqw;opacity:0}
+.card .ic{width:5.6cqw;height:5.6cqw;background:var(--o)}
+.c0{background:linear-gradient(145deg,#0284C7,#075985);color:#fff}
+.c1{background:#E0F2FE;color:var(--pd)}
+.c2{background:#FFEDD5;color:#9A3412}
+.c1 .ic,.c2 .ic{background:var(--p)}
+.c2 .ic{background:var(--o)}
+.card h3{font-size:2.5cqw;font-weight:700;line-height:1.3}
+.card p{font-size:1.95cqw;line-height:1.55;opacity:.95}
+.slide.active .card{animation:up .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.15s + var(--i)*.18s)}
+@keyframes up{from{opacity:0;transform:translateY(3cqw)}to{opacity:1;transform:none}}
+.foot{position:absolute;left:4cqw;right:4cqw;bottom:1.4cqw;display:flex;justify-content:space-between;align-items:center;font-size:1.5cqw;color:#0369A1}
+.foot button{font:inherit;border:0;background:var(--soft);color:var(--p);width:3.2cqw;height:3.2cqw;border-radius:50%;cursor:pointer;font-size:1.6cqw}
+.foot button:hover{background:var(--p);color:#fff}
+.foot button:focus-visible{outline:.25cqw solid var(--o)}
+.nav{display:flex;gap:.8cqw;align-items:center}
+.center{align-items:center;justify-content:center;text-align:center}
+.center .head{flex-direction:column-reverse;margin-top:2cqw}
+.who{background:var(--soft);border-radius:1.8cqw;padding:1.6cqw 3cqw;margin-top:2.4cqw;font-size:2.1cqw;line-height:1.6;opacity:0}
+.slide.active .who{animation:up .6s .3s forwards}
+@media (prefers-reduced-motion:reduce){.slide.active .card,.slide.active .who{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<script>
+const I={
+book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>',
+flask:'<path d="M10 2v7.5L4 20a1 1 0 0 0 .9 1.5h14.2a1 1 0 0 0 .9-1.5L14 9.5V2"/><path d="M8.5 2h7"/>',
+calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+home:'<path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/>',
+star:'<path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+rocket:'<path d="M12 15l-3-3a22 22 0 0 1 2-4 12 12 0 0 1 11-6c0 3-1 8-6 11a22 22 0 0 1-4 2z"/><path d="M9 12H4s.5-3 2-4c1.6-1 5 0 5 0M12 15v5s3-.5 4-2c1-1.6 0-5 0-5"/>',
+check:'<circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/>',
+grad:'<path d="M22 10L12 5 2 10l10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+ear:'<path d="M6 8a6 6 0 0 1 12 0c0 4-3 5-3 8a3 3 0 0 1-6 0"/><path d="M9 8a3 3 0 0 1 6 0"/>',
+pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+mic:'<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/>'};
+const svg=n=>`<div class="ic"><svg viewBox="0 0 24 24">${I[n]}</svg></div>`;
+const S=[
+{big:1,tag:'AEP Program',icon:'globe',t:'ห้องโปรแกรม <span class="g">AEP</span><br>ภาษาอาหรับและอังกฤษ',sub:'โรงเรียนตาร์เบียตุลวาตันมูลนิธิ',who:'นำเสนอโดย อ.ฟัยศอล โต๊ะมา<br>ครูภาษาอาหรับ ห้องโปรแกรม AEP'},
+{tag:'ทำความรู้จัก',icon:'grad',t:'AEP คือ<span class="g">อะไร?</span>',sub:'ห้องเรียนสายวิทย์-คณิต ที่เสริมพลังด้านภาษา',c:[['flask','สายวิทย์-คณิต','เรียนเนื้อหาวิทย์-คณิตเหมือนสายหลักทั่วไป'],['book','ภาษาอาหรับ','เรียนทุกวัน วันละ 1 ชั่วโมง'],['globe','ภาษาอังกฤษ','เรียนทุกวัน วันละ 1 ชั่วโมง']]},
+{tag:'จุดเด่น',icon:'star',t:'ทำไมต้อง<span class="g">สองภาษา?</span>',c:[['globe','เปิดโลกกว้าง','อาหรับและอังกฤษใช้สื่อสารได้ทั่วโลก'],['rocket','ต่อยอดอนาคต','เป็นแต้มต่อทั้งเรื่องเรียนต่อและการทำงาน'],['heart','เข้าใจศาสนาและวัฒนธรรม','ภาษาอาหรับช่วยให้เข้าถึงความรู้ได้ลึกขึ้น']]},
+{tag:'ตารางเรียน',icon:'clock',t:'ตารางเรียน<span class="g">ของเรา</span>',pill:'ทุกเช้า 8.00–10.00 น.',c:[['book','ภาษาอาหรับ','1 ชั่วโมง ทุกวัน'],['globe','ภาษาอังกฤษ','1 ชั่วโมง ทุกวัน'],['calc','วิชาอื่น ๆ','เรียนตามปกติในเวลาที่เหลือ']]},
+{tag:'ภาษาอาหรับ',icon:'book',t:'เรียน<span class="g">อาหรับ</span> ทุกวัน',c:[['ear','ฟัง–พูด','ฝึกจับเสียงและออกเสียงให้ชัด'],['book','อ่าน','เริ่มจากพื้นฐาน ค่อย ๆ ไปสู่บทอ่านจริง'],['pen','เขียน','ฝึกเขียนตัวอักษรและประโยคง่าย ๆ']]},
+{tag:'ภาษาอังกฤษ',icon:'chat',t:'เรียน<span class="g">อังกฤษ</span> ทุกวัน',c:[['mic','กล้าพูด','ฝึกใช้ภาษาในสถานการณ์จริง'],['book','อ่านเข้าใจ','เพิ่มคำศัพท์และทักษะการอ่าน'],['pen','เขียนสื่อสาร','เรียบเรียงความคิดเป็นภาษาอังกฤษ']]},
+{tag:'วิทย์-คณิต',icon:'flask',t:'เรียนวิทย์-คณิต<span class="g">ไม่ขาดตก</span>',sub:'ภาษาเข้ม แต่พื้นฐานสายวิทย์ก็ครบ',c:[['flask','วิทยาศาสตร์','เรียนตามปกติในช่วงเวลาอื่น'],['calc','คณิตศาสตร์','เรียนตามปกติในช่วงเวลาอื่น'],['target','สมดุลดี','เช้าเน้นภาษา สายเน้นวิชาการ']]},
+{tag:'บรรยากาศ',icon:'users',t:'เรียนแบบ<span class="g">เป็นกันเอง</span>',c:[['users','ห้องเรียนอบอุ่น','ครูและเพื่อนช่วยกันเรียนรู้'],['chat','ฝึกใช้จริง','ไม่ท่องอย่างเดียว แต่ได้ลองพูดลองใช้'],['heart','ผิดได้ ถามได้','กล้าลอง กล้าถาม เก่งขึ้นทุกวัน']]},
+{tag:'สิ่งที่ได้',icon:'check',t:'ทักษะที่ได้<span class="g">ติดตัว</span>',c:[['globe','สื่อสารสองภาษา','ทั้งอาหรับและอังกฤษ'],['target','วินัยการเรียน','เรียนสม่ำเสมอทุกเช้า'],['star','ความมั่นใจ','กล้าแสดงออกมากขึ้น']]},
+{tag:'ก้าวต่อไป',icon:'rocket',t:'ต่อยอด<span class="g">อนาคต</span>',c:[['grad','เรียนต่อ','สมัครเรียนต่อได้หลากหลายสาขา'],['globe','มองโลกกว้าง','ใช้ภาษาเป็นสะพานสู่โอกาสใหม่'],['sun','เส้นทางของตัวเอง','เลือกต่อยอดตามความถนัด']]},
+{tag:'สำหรับผู้ปกครอง',icon:'home',t:'ช่วยลูก<span class="g">ที่บ้าน</span>',c:[['clock','ดูแลเวลา','ให้ลูกพร้อมถึงโรงเรียนก่อน 8.00 น.'],['heart','ให้กำลังใจ','ชวนลูกเล่าว่าวันนี้ได้เรียนอะไร'],['chat','ติดต่อครู','มีข้อสงสัยคุยกับครูได้เสมอ']]},
+{big:1,tag:'ขอบคุณ',icon:'heart',t:'ขอบคุณ<span class="g">ครับ</span>',sub:'ติดตามข่าวสารห้อง AEP ได้ที่เพจ Facebook ของโรงเรียน',who:'อ.ฟัยศอล โต๊ะมา<br>ครูภาษาอาหรับ ห้องโปรแกรม AEP'}
+];
+const st=document.getElementById('stage');
+S.forEach((s,k)=>{
+ const d=document.createElement('section');d.className='slide'+(s.big?' center big':'');
+ let h=`<div class="tag">${s.tag}</div><div class="head"><h${s.big?1:2}>${s.t}</h${s.big?1:2}>${svg(s.icon)}</div>`;
+ if(s.pill)h+=`<div class="pill">${s.pill}</div>`;
+ if(s.sub)h+=`<div class="sub">${s.sub}</div>`;
+ if(s.who)h+=`<div class="who">${s.who}</div>`;
+ if(s.c)h+=`<div class="cards" style="--n:${s.c.length}">`+s.c.map((c,i)=>`<div class="card c${i%3}" style="--i:${i}">${svg(c[0])}<h3>${c[1]}</h3><p>${c[2]}</p></div>`).join('')+'</div>';
+ h+=`<div class="foot"><span>AEP · ตาร์เบียตุลวาตันมูลนิธิ</span><span class="nav"><button aria-label="ก่อนหน้า" data-d="-1">‹</button>${k+1} / ${S.length}<button aria-label="ถัดไป" data-d="1">›</button></span></div>`;
+ d.innerHTML=h;st.appendChild(d);
+});
+const sl=[...st.children];let cur=0;
+function go(n){cur=Math.max(0,Math.min(sl.length-1,n));sl.forEach((e,i)=>e.classList.toggle('active',i===cur));history.replaceState(null,'','#'+(cur+1))}
+st.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(cur+ +b.dataset.d)});
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key))go(cur-1)});
+let x0;addEventListener('touchstart',e=>x0=e.touches[0].clientX);
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(cur+(dx<0?1:-1))});
+go((parseInt(location.hash.slice(1))||1)-1);
+</script>
+</body>
+</html>
